@@ -5,8 +5,6 @@ namespace Http;
 require_once(__DIR__ . "/../../includes/constants.php");
 require_once(__DIR__ . "/StatusCode.php");
 
-use Exception;
-
 class Request
 {
     private string $apiKey = "";
