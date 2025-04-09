@@ -149,6 +149,8 @@ class Database
         }
         catch (Exception $exception)
         {
+            $this->displayException($exception);
+
             switch ($exception->getCode())
             {
                 case 23000: throw new RequestException(
@@ -172,6 +174,15 @@ class Database
 
         echo "<pre>";
         var_dump($params);
+        echo "</pre>";
+    }
+
+    public function displayException(Exception $exception): void
+    {
+        if (!$this->debug) return;
+
+        echo "<pre>";
+        var_dump($exception);
         echo "</pre>";
     }
 }

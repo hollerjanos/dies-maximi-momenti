@@ -95,9 +95,18 @@ class Datatype
     }
 
     public static function foreignKey(
-        string $fromColumn, string $table, string $toColumn
+        string $fromColumn,
+        string $table,
+        string $toColumn,
+        string $onUpdate = "CASCADE",
+        string $onDelete = "CASCADE"
     ): string
     {
-        return "FOREIGN KEY (`$fromColumn`) REFERENCES `$table` (`$toColumn`)";
+        $query  = "FOREIGN KEY (`$fromColumn`)";
+        $query .= " REFERENCES `$table` (`$toColumn`)";
+        $query .= " ON UPDATE $onUpdate";
+        $query .= " ON DELETE $onDelete";
+
+        return $query;
     }
 }
