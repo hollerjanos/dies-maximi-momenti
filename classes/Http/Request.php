@@ -4,68 +4,107 @@ namespace Http;
 
 require_once(__DIR__ . "/../../includes/constants.php");
 require_once(__DIR__ . "/StatusCode.php");
+require_once(__DIR__ . "/Exception/UnauthorizedException.php");
+
+use Http\StatusCode;
+use Http\Exception\UnauthorizedException;
 
 class Request
 {
-    private string $apiKey = "";
-    private string $method = "";
-
+    /**
+     * Code
+     *
+     * @var int
+     */
     private int $code;
+
+    /**
+     * Message
+     *
+     * @var string
+     */
     private string $message;
 
+    /**
+     * API key
+     *
+     * @var string
+     */
+    private string $apiKey;
+
+    /**
+     * Method
+     *
+     * @var string
+     */
+    private string $method;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
-        $this->code = StatusCode::badRequest();
+        $this->code = StatusCode::BAD_REQUEST;
         $this->message = "Request has not been processed yet!";
 
         $this->apiKey = $_SERVER["PHP_AUTH_USER"] ?? "";
         $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
     }
 
+    /**
+     * Check authorizations
+     *
+     * @return void
+     *
+     * @throws UnauthorizedException If the API key is invalid.
+     */
     public function checkAuthorizations(): void
     {
         if ($this->apiKey !== API_KEY)
         {
-            $this->setCode(StatusCode::unauthorized());
-            $this->setMessage("Unauthorized request!");
-
-            throw new RequestException($this->message, $this->code);
+            throw new UnauthorizedException();
         }
     }
 
+    /**
+     * Set code
+     *
+     * @param int $code Value of the code.
+     *
+     * @return void
+     */
     public function setCode(int $code): void
     {
         $this->code = $code;
     }
 
+    /**
+     * Set message
+     *
+     * @param string $message Value of the message.
+     *
+     * @return void
+     */
     public function setMessage(string $message): void
     {
         $this->message = $message;
     }
 
+    /**
+     * Get method
+     *
+     * @return string
+     */
     public function getMethod(): string
     {
         return $this->method;
     }
 
-    public function success(string $message): void
-    {
-        $this->setCode(StatusCode::ok());
-        $this->setMessage($message);
-    }
-
-    public function failure(string $message): void
-    {
-        $this->setCode(StatusCode::badRequest());
-        $this->setMessage($message);
-    }
-
-    public function methodNotAllowed(): void
-    {
-        $this->setCode(StatusCode::methodNotAllowed());
-        $this->setMessage("Method not allowed!");
-    }
-
+    /**
+     * Print result
+     *
+     * @return void
+     */
     public function printResult(): void
     {
         echo json_encode([
@@ -74,8 +113,18 @@ class Request
         ]);
     }
 
-    public function setHttpResponseCode(): void
+    /**
+     * Send header
+     *
+     * @return void
+     */
+    public function sendHeader(): void
     {
-        http_response_code($this->code);
+        header(
+            "Content-Type: application/json; Charset=utf-8",
+            true,
+            $this->code
+        );
     }
 }
+

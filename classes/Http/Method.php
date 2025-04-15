@@ -4,23 +4,32 @@ namespace Http;
 
 class Method
 {
-    public static function get(): string
-    {
-        return "GET";
-    }
+    /**
+     * GET method
+     *
+     * @var string
+     */
+    public const GET = "GET";
 
-    public static function post(): string
-    {
-        return "POST";
-    }
+    /**
+     * POST method
+     *
+     * @var string
+     */
+    public const POST = "POST";
 
-    public static function put(): string
-    {
-        return "PUT";
-    }
+    /**
+     * PUT method
+     *
+     * @var string
+     */
+    public const PUT = "PUT";
 
-    public static function delete(): string
-    {
-        return "DELETE";
-    }
+    /**
+     * DELETE method
+     *
+     * @var string
+     */
+    public const DELETE = "DELETE";
 }
+
